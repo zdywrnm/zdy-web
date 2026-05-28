@@ -1,0 +1,46 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonical?: string;
+}
+
+const { title, description, image, canonical } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN" class="dark">
+  <head>
+    <BaseHead title={title} description={description} image={image} canonical={canonical} />
+    <script is:inline>
+      const storedTheme = localStorage.getItem('theme');
+      const theme = storedTheme ?? 'dark';
+      document.documentElement.classList.toggle('light', theme === 'light');
+      document.documentElement.classList.toggle('dark', theme !== 'light');
+    </script>
+  </head>
+  <body>
+    <div class="site-shell">
+      <Nav />
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+    <script is:inline>
+      const themeButton = document.querySelector('[data-theme-toggle]');
+      themeButton?.addEventListener('click', () => {
+        const nextTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light';
+        document.documentElement.classList.toggle('light', nextTheme === 'light');
+        document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+        localStorage.setItem('theme', nextTheme);
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from '../../components/ProjectCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="作品" description="赵鼎熠（yrjm）的作品项目，目前展示 PaperBanana。">
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="page-title">作品</h1>
+      <p class="page-copy">当前公开展示 PaperBanana，一个 AI 驱动的学术插图生成工具。</p>
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+</BaseLayout>

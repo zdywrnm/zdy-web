@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+export interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, description, tech, repo, demo } = project.data;
+---
+
+<article class="project-feature">
+  <div class="project-content">
+    <h3 class="project-title">{title}</h3>
+    <p class="project-description">{description}</p>
+    <ul class="tech-list" aria-label={`${title} 技术栈`}>
+      {tech.map((item) => <li>{item}</li>)}
+    </ul>
+    <div class="project-actions">
+      <a class="button button-primary" href={`/projects/${project.id}/`}>了解更多</a>
+      {repo && <a class="button button-secondary" href={repo} target="_blank" rel="noreferrer">GitHub</a>}
+      {demo && <a class="button button-secondary" href={demo} target="_blank" rel="noreferrer">Demo</a>}
+    </div>
+  </div>
+  <div class="project-visual" aria-hidden="true">
+    <div class="diagram-panel">
+      <span class="diagram-orbit"></span>
+      <span class="diagram-orbit"></span>
+      <span class="diagram-orbit"></span>
+      <span class="diagram-core">Paper<br />Banana</span>
+      <span class="diagram-node web">web</span>
+      <span class="diagram-node desktop">desktop</span>
+      <span class="diagram-node mobile">mobile</span>
+      <span class="diagram-node api">api</span>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from '../components/ProjectCard.astro';
+import HeroBackground from '../components/hero/HeroBackground';
+import HeroFallback from '../components/hero/HeroFallback.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
+---
+
+<BaseLayout
+  title="赵鼎熠 / yrjm"
+  description="赵鼎熠（yrjm）的个人网站，展示 PaperBanana 等正在做的产品与个人介绍。"
+>
+  <section class="hero-section">
+    <HeroFallback />
+    <HeroBackground client:only="react" />
+    <div class="hero-content">
+      <h1 class="hero-title">赵鼎熠 / yrjm</h1>
+      <p class="hero-subtitle">用 AI、工程和商业视角做有用的产品。</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#projects">看作品</a>
+        <a class="button button-secondary" href="/about/">关于我</a>
+      </div>
+    </div>
+    <div class="hero-next" aria-hidden="true">PaperBanana</div>
+  </section>
+
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">作品</h2>
+          <p class="section-copy">目前只展示一个项目：PaperBanana。它是我围绕 AI 学术插图场景推进的多端产品。</p>
+        </div>
+        <a class="button button-secondary" href="/projects/">全部作品</a>
+      </div>
+      <ProjectCard project={featuredProject} />
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">关于</h2>
+          <p class="section-copy">浙江万里学院国际经济与贸易专业大一在读，常驻宁波。关注 AI 工具、男士穿搭、投资、历史与航天。</p>
+        </div>
+        <a class="button button-secondary" href="/about/">更多信息</a>
+      </div>
+      <div class="info-grid">
+        <article class="info-item">
+          <h3>正在做</h3>
+          <p>PaperBanana、OpenTrad、他山GKD 研究组成员、跨境电商。</p>
+        </article>
+        <article class="info-item">
+          <h3>方法</h3>
+          <p>把产品想法拆成能跑起来的工程系统，再用真实反馈持续校准。</p>
+        </article>
+        <article class="info-item">
+          <h3>联系</h3>
+          <p><a href="mailto:yrjmdqmmx@gmail.com">yrjmdqmmx@gmail.com</a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
