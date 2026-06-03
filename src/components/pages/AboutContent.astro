@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { RESUME_PATH, SOCIAL } from '../../consts';
+import { ui, type Lang } from '../../i18n/ui';
+
+export interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'zh' } = Astro.props;
+const t = ui[lang];
+const a = t.about;
+---
+
+<BaseLayout title={t.meta.about.title} description={t.meta.about.desc} lang={lang}>
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="page-title">{a.pageTitle}</h1>
+      <p class="page-copy">{a.pageCopy}</p>
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">{a.summaryTitle}</h2>
+          <p class="section-copy">{a.summaryCopy}</p>
+        </div>
+      </div>
+      <div class="summary-panel">
+        <ul class="summary-list">
+          {a.summaryItems.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" class="section section-compact">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">{a.experienceTitle}</h2>
+          <p class="section-copy">{a.experienceCopy}</p>
+        </div>
+      </div>
+      <div class="timeline-list">
+        {a.experienceItems.map((item) => (
+          <article class="timeline-item">
+            <p class="timeline-kind">{item.kind}</p>
+            <div class="timeline-head">
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.role}</p>
+              </div>
+              <span>{item.meta}</span>
+            </div>
+            <p>{item.detail}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">{a.skillsTitle}</h2>
+          <p class="section-copy">{a.skillsCopy}</p>
+        </div>
+      </div>
+      <ul class="skill-cloud" aria-label={a.skillsTitle}>
+        {a.skills.map((skill) => <li>{skill}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container info-grid">
+      <article class="info-item">
+        <h3>{a.nowTitle}</h3>
+        <p>{a.now}</p>
+      </article>
+      <article class="info-item">
+        <h3>{a.interestTitle}</h3>
+        <p>{a.interest}</p>
+      </article>
+      <article class="info-item">
+        <h3>{a.contactTitle}</h3>
+        <p>
+          <a href={SOCIAL.github} target="_blank" rel="noreferrer">GitHub @zdywrnm</a><br />
+          <a href={SOCIAL.linkedin} target="_blank" rel="noreferrer">LinkedIn</a><br />
+          <a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a><br />
+          <a href={RESUME_PATH} download>{a.resumeLink}</a>
+        </p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,29 @@
+---
+import ProjectCard from '../ProjectCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ui, type Lang } from '../../i18n/ui';
+import { getProjectsByLang } from '../../lib/projects';
+
+export interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'zh' } = Astro.props;
+const t = ui[lang];
+const projects = await getProjectsByLang(lang);
+---
+
+<BaseLayout title={t.meta.projects.title} description={t.meta.projects.desc} lang={lang}>
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="page-title">{t.projects.title}</h1>
+      <p class="page-copy">{t.projects.copy}</p>
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container project-stack">
+      {projects.map((project) => <ProjectCard project={project} lang={lang} />)}
+    </div>
+  </section>
+</BaseLayout>

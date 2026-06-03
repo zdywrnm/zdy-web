@@ -2,7 +2,13 @@
 
 赵鼎熠（yrjm）的个人网站，部署到 `zhaodingyi.com`。技术栈是 Astro 6、React islands、React Three Fiber、Tailwind CSS v4 和 GitHub Pages。
 
-当前范围包含首页、作品页、项目详情页、关于页和 404。没有博客、RSS、评论、搜索和分析工具。
+当前范围包含首页、作品页、项目详情页、关于页和 404，支持中/英双语切换（中文在 `/`，英文在 `/en/`），并提供简历 PDF 下载、sitemap 与 JSON-LD 结构化数据。没有博客、RSS、评论、搜索和分析工具。
+
+## 双语与文案
+
+- 界面文案集中在 `src/i18n/ui.ts`（`zh` / `en` 两套），辅助函数 `getLangFromUrl`、`localizePath`、`toLangPath` 也在这里。
+- 页面正文抽成 `src/components/pages/*.astro`（接受 `lang` prop），中文路由在 `src/pages/`、英文镜像在 `src/pages/en/`，路由文件只负责传 `lang`。
+- 站点级链接（GitHub / 领英 / 邮箱 / 简历路径）集中在 `src/consts.ts`。简历 PDF 放在 `public/resume-zhaodingyi.pdf`。
 
 ## 本地开发
 
@@ -20,7 +26,7 @@ pnpm preview
 
 ## 内容维护
 
-项目内容放在 `src/content/projects/`。新增项目时复制 `paperbanana.md`，保留这些 frontmatter 字段：
+项目内容按语言放在 `src/content/projects/zh/` 和 `src/content/projects/en/`，**同一项目两种语言用同名文件**（如 `zh/paperbanana.md` 与 `en/paperbanana.md`），slug 由文件名决定。新增项目时复制一对文件，保留这些 frontmatter 字段：
 
 ```yaml
 title: Project Name
@@ -30,6 +36,7 @@ tech:
   - Astro
 repo: https://github.com/example/repo
 demo: https://example.com
+cover: /projects/example.png   # 可选：真实截图放在 public/projects/
 role: 独立开发者
 period: 2026.01 - 至今
 location: 宁波
@@ -40,7 +47,7 @@ nodes:
 featured: false
 ```
 
-首页会重点展示 `featured: true` 的项目，并把其他项目作为补充列表展示；作品页会展示全部项目。
+语言由所在文件夹（`zh/` 或 `en/`）决定，见 `src/lib/projects.ts`。项目卡有 `cover` 时显示真实截图，否则回退到抽象示意图。首页重点展示 `featured: true` 的项目并把其他作为补充列表，作品页展示全部。
 
 ## GitHub Pages 部署
 

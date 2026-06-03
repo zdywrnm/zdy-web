@@ -1,4 +1,4 @@
-import { MeshDistortMaterial, OrbitControls, PointMaterial } from '@react-three/drei';
+import { MeshDistortMaterial, PointMaterial } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -10,6 +10,13 @@ function hasWebGL() {
   } catch {
     return false;
   }
+}
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 }
 
 function FluidOrb() {
@@ -81,7 +88,8 @@ export default function HeroBackground() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setReady(hasWebGL());
+    // 仅在支持 WebGL 且用户未要求减少动效时挂载 3D；否则露出 HeroFallback 静态渐变球。
+    setReady(hasWebGL() && !prefersReducedMotion());
   }, []);
 
   if (!ready) return null;
@@ -91,7 +99,7 @@ export default function HeroBackground() {
       className="hero-canvas"
       dpr={[1, 2]}
       camera={{ position: [0, 0, 7.4], fov: 44 }}
-      gl={{ alpha: true, antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true }}
+      gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
     >
       <ambientLight intensity={1.2} />
       <directionalLight position={[4, 3, 5]} intensity={1.8} color="#ffffff" />
@@ -100,7 +108,6 @@ export default function HeroBackground() {
       <ParticleRing color="#22d3ee" offset={0.4} />
       <ParticleRing color="#8b5cf6" offset={1.7} />
       <FluidOrb />
-      <OrbitControls enableZoom={false} enablePan={false} rotateSpeed={0.35} />
     </Canvas>
   );
 }

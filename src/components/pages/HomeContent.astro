@@ -1,0 +1,137 @@
+---
+import ProjectCard from '../ProjectCard.astro';
+import HeroBackground from '../hero/HeroBackground';
+import HeroFallback from '../hero/HeroFallback.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { RESUME_PATH, SOCIAL } from '../../consts';
+import { ui, localizePath, type Lang } from '../../i18n/ui';
+import { getProjectsByLang, projectHref } from '../../lib/projects';
+
+export interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'zh' } = Astro.props;
+const t = ui[lang];
+
+const projects = await getProjectsByLang(lang);
+const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
+const otherProjects = projects.filter((project) => project.id !== featuredProject.id).slice(0, 2);
+
+const aboutHref = localizePath('/about/', lang);
+const experienceHref = localizePath('/about/#experience', lang);
+const projectsHref = localizePath('/projects/', lang);
+---
+
+<BaseLayout title={t.meta.home.title} description={t.meta.home.desc} lang={lang}>
+  <section class="hero-section">
+    <HeroFallback />
+    <HeroBackground client:only="react" />
+    <div class="hero-content">
+      <h1 class="hero-title">{t.hero.title}</h1>
+      <p class="hero-subtitle">{t.hero.subtitle}</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#projects">{t.hero.seeWork}</a>
+        <a class="button button-secondary" href={experienceHref}>{t.hero.seeExperience}</a>
+        <a class="button button-secondary" href={RESUME_PATH} download>{t.hero.downloadResume}</a>
+      </div>
+    </div>
+    <div class="hero-next" aria-hidden="true">{t.hero.next}</div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">{t.home.positioningTitle}</h2>
+          <p class="section-copy">{t.home.positioningCopy}</p>
+        </div>
+        <a class="button button-secondary" href={aboutHref}>{t.home.fullProfile}</a>
+      </div>
+      <div class="info-grid">
+        {t.home.capabilities.map((item) => (
+          <article class="info-item">
+            <h3>{item.title}</h3>
+            <p>{item.copy}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">{t.home.worksTitle}</h2>
+          <p class="section-copy">{t.home.worksCopy}</p>
+        </div>
+        <a class="button button-secondary" href={projectsHref}>{t.home.allWorks}</a>
+      </div>
+      <ProjectCard project={featuredProject} lang={lang} />
+      {otherProjects.length > 0 && (
+        <div class="project-list">
+          {otherProjects.map((project) => (
+            <a class="project-row" href={projectHref(project)}>
+              <span>
+                <strong>{project.data.title}</strong>
+                <small>{project.data.description}</small>
+              </span>
+              <span>{project.data.period}</span>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">{t.home.experienceTitle}</h2>
+          <p class="section-copy">{t.home.experienceCopy}</p>
+        </div>
+        <a class="button button-secondary" href={experienceHref}>{t.home.moreExperience}</a>
+      </div>
+      <div class="timeline-list compact">
+        {t.home.experiences.map((item) => (
+          <article class="timeline-item">
+            <p class="timeline-meta">{item.meta}</p>
+            <h3>{item.title}</h3>
+            <p>{item.copy}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section section-compact">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">{t.home.contactTitle}</h2>
+          <p class="section-copy">{t.home.contactCopy}</p>
+        </div>
+        <a class="button button-primary" href={`mailto:${SOCIAL.email}`}>{t.home.sendEmail}</a>
+      </div>
+      <div class="info-grid">
+        <article class="info-item">
+          <h3>{t.home.emailLabel}</h3>
+          <p><a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a></p>
+        </article>
+        <article class="info-item">
+          <h3>{t.home.linksLabel}</h3>
+          <p>
+            <a href={SOCIAL.github} target="_blank" rel="noreferrer">GitHub @zdywrnm</a><br />
+            <a href={SOCIAL.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+          </p>
+        </article>
+        <article class="info-item">
+          <h3>{t.home.resumeLabel}</h3>
+          <p><a href={RESUME_PATH} download>{t.home.downloadResumePdf}</a></p>
+        </article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
