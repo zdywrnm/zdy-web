@@ -11,6 +11,11 @@ const projects = defineCollection({
     repo: z.string().url().optional(),
     demo: z.string().url().optional(),
     cover: z.string().optional(),
+    role: z.string().optional(),
+    period: z.string().optional(),
+    location: z.string().optional(),
+    status: z.string().optional(),
+    nodes: z.array(z.string()).optional(),
     featured: z.boolean().default(false),
   }),
 });

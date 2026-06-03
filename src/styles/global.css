@@ -408,6 +408,13 @@ textarea {
   font-size: 1.08rem;
 }
 
+.project-meta-line {
+  margin: 14px 0 0;
+  color: var(--dim);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+}
+
 .tech-list {
   display: flex;
   flex-wrap: wrap;
@@ -519,6 +526,73 @@ textarea {
   left: 12%;
 }
 
+.diagram-node.node-1 {
+  top: 12%;
+  left: 10%;
+}
+
+.diagram-node.node-2 {
+  top: 18%;
+  right: 8%;
+}
+
+.diagram-node.node-3 {
+  right: 12%;
+  bottom: 12%;
+}
+
+.diagram-node.node-4 {
+  bottom: 10%;
+  left: 12%;
+}
+
+.project-stack {
+  display: grid;
+  gap: 28px;
+}
+
+.project-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.project-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 74px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-solid) 58%, transparent);
+  color: var(--muted);
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.project-row:hover {
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--surface-solid) 76%, transparent);
+  color: var(--fg);
+}
+
+.project-row span:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.project-row strong {
+  color: var(--fg);
+  font-size: 1rem;
+}
+
+.project-row small,
+.project-row span:last-child {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -552,6 +626,108 @@ textarea {
   max-width: 900px;
   font-size: clamp(3.2rem, 8vw, 7.8rem);
   line-height: 0.92;
+}
+
+.summary-panel {
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--surface-solid) 76%, transparent), color-mix(in srgb, var(--bg) 84%, transparent)),
+    radial-gradient(circle at 8% 12%, color-mix(in srgb, var(--cyan) 12%, transparent), transparent 24rem);
+}
+
+.summary-list {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--muted);
+}
+
+.summary-list li::marker {
+  color: var(--cyan);
+}
+
+.timeline-list {
+  display: grid;
+  gap: 18px;
+}
+
+.timeline-list.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.timeline-item {
+  position: relative;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-solid) 64%, transparent);
+}
+
+.timeline-item::before {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  width: 3px;
+  height: 42px;
+  content: '';
+  background: linear-gradient(180deg, var(--cyan), var(--accent));
+}
+
+.timeline-kind,
+.timeline-meta {
+  margin: 0 0 10px;
+  color: var(--dim);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.74rem;
+}
+
+.timeline-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.timeline-head h3,
+.timeline-item h3 {
+  margin: 0;
+  color: var(--fg);
+  font-size: 1.06rem;
+}
+
+.timeline-head p,
+.timeline-item p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.timeline-head span {
+  flex: 0 0 auto;
+  color: var(--dim);
+  font-size: 0.86rem;
+  text-align: right;
+}
+
+.skill-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill-cloud li {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--surface-solid) 64%, transparent);
+  color: var(--fg);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.82rem;
 }
 
 .content-panel {
@@ -653,8 +829,20 @@ textarea {
     font-size: 0.9rem;
   }
 
+  .nav-links {
+    gap: 2px;
+  }
+
   .nav-link {
-    display: none;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0 7px;
+    font-size: 0.78rem;
+  }
+
+  .icon-button {
+    min-width: 36px;
+    min-height: 36px;
   }
 
   .hero-section {
@@ -686,7 +874,8 @@ textarea {
 
   .project-feature,
   .project-detail,
-  .info-grid {
+  .info-grid,
+  .timeline-list.compact {
     grid-template-columns: 1fr;
   }
 
@@ -700,5 +889,18 @@ textarea {
 
   .page-hero {
     padding-top: 116px;
+  }
+
+  .project-row,
+  .timeline-head {
+    display: grid;
+  }
+
+  .timeline-head span {
+    text-align: left;
+  }
+
+  .summary-panel {
+    padding: 22px;
   }
 }

@@ -6,16 +6,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<BaseLayout title="作品" description="赵鼎熠（yrjm）的作品项目，目前展示 PaperBanana。">
+<BaseLayout title="作品" description="赵鼎熠（yrjm）的作品项目，包括 PaperBanana 和万里国贸之家网站。">
   <section class="page-hero">
     <div class="container">
       <h1 class="page-title">作品</h1>
-      <p class="page-copy">当前公开展示 PaperBanana，一个 AI 驱动的学术插图生成工具。</p>
+      <p class="page-copy">这里收录我从简历中提炼出来的真实项目：AI 学术配图产品、专业学习平台，以及后续会继续补充的工具链实践。</p>
     </div>
   </section>
 
   <section class="section section-compact">
-    <div class="container">
+    <div class="container project-stack">
       {projects.map((project) => <ProjectCard project={project} />)}
     </div>
   </section>

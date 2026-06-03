@@ -7,6 +7,35 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
+const otherProjects = projects.filter((project) => project.id !== featuredProject.id).slice(0, 2);
+
+const capabilityItems = [
+  {
+    title: 'AI 全栈交付',
+    copy: '熟练用 Claude Code、Codex、Cursor 等 AI 工具完成需求拆解、编码调试到部署上线的完整闭环。',
+  },
+  {
+    title: '商业场景理解',
+    copy: '国际经济与贸易专业在读，关注跨境电商、市场营销和产品增长，能把工程能力落到真实业务问题上。',
+  },
+  {
+    title: '多端产品推进',
+    copy: '主导 PaperBanana 多端产品开发，覆盖 Web、桌面端、移动端和微信小程序。',
+  },
+];
+
+const experienceItems = [
+  {
+    title: '北京安尘科技有限公司',
+    meta: 'AI 赋能招聘专员 / 2025.07 - 2025.09',
+    copy: '创新性使用 ChatGPT、DeepSeek 等工具做人才简历智能对比筛选，并通过流程优化将招聘周期缩短 50%。',
+  },
+  {
+    title: '中国科学院大学他山协会',
+    meta: 'AIGC 开发组 / 2026.03 - 至今',
+    copy: '参与组内 AI 工具链建设，推动模型适配、零环境运行工具封装和标准化 Skill 资产沉淀。',
+  },
+];
 ---
 
 <BaseLayout
@@ -18,13 +47,33 @@ const featuredProject = projects.find((project) => project.data.featured) ?? pro
     <HeroBackground client:only="react" />
     <div class="hero-content">
       <h1 class="hero-title">赵鼎熠 / yrjm</h1>
-      <p class="hero-subtitle">用 AI、工程和商业视角做有用的产品。</p>
+      <p class="hero-subtitle">国际经济与贸易在读，用 AI 工具链做全栈产品，也关注跨境电商与市场营销。</p>
       <div class="hero-actions">
         <a class="button button-primary" href="#projects">看作品</a>
-        <a class="button button-secondary" href="/about/">关于我</a>
+        <a class="button button-secondary" href="/about/#experience">看经历</a>
       </div>
     </div>
-    <div class="hero-next" aria-hidden="true">PaperBanana</div>
+    <div class="hero-next" aria-hidden="true">full-stack / commerce</div>
+  </section>
+
+  <section class="section section-compact">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">定位</h2>
+          <p class="section-copy">求职方向：全栈开发、市场营销。目标城市：北京、上海、深圳、杭州、宁波。</p>
+        </div>
+        <a class="button button-secondary" href="/about/">完整资料</a>
+      </div>
+      <div class="info-grid">
+        {capabilityItems.map((item) => (
+          <article class="info-item">
+            <h3>{item.title}</h3>
+            <p>{item.copy}</p>
+          </article>
+        ))}
+      </div>
+    </div>
   </section>
 
   <section id="projects" class="section">
@@ -32,11 +81,24 @@ const featuredProject = projects.find((project) => project.data.featured) ?? pro
       <div class="section-header">
         <div>
           <h2 class="section-title">作品</h2>
-          <p class="section-copy">目前只展示一个项目：PaperBanana。它是我围绕 AI 学术插图场景推进的多端产品。</p>
+          <p class="section-copy">代表项目来自简历里的真实交付：PaperBanana 和万里国贸之家网站。</p>
         </div>
         <a class="button button-secondary" href="/projects/">全部作品</a>
       </div>
       <ProjectCard project={featuredProject} />
+      {otherProjects.length > 0 && (
+        <div class="project-list">
+          {otherProjects.map((project) => (
+            <a class="project-row" href={`/projects/${project.id}/`}>
+              <span>
+                <strong>{project.data.title}</strong>
+                <small>{project.data.description}</small>
+              </span>
+              <span>{project.data.period}</span>
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
@@ -44,24 +106,19 @@ const featuredProject = projects.find((project) => project.data.featured) ?? pro
     <div class="container">
       <div class="section-header">
         <div>
-          <h2 class="section-title">关于</h2>
-          <p class="section-copy">浙江万里学院国际经济与贸易专业大一在读，常驻宁波。关注 AI 工具、男士穿搭、投资、历史与航天。</p>
+          <h2 class="section-title">经历</h2>
+          <p class="section-copy">简历里的经历重点不是堆岗位，而是持续把 AI 工具、开发能力和业务理解组合起来。</p>
         </div>
-        <a class="button button-secondary" href="/about/">更多信息</a>
+        <a class="button button-secondary" href="/about/#experience">更多经历</a>
       </div>
-      <div class="info-grid">
-        <article class="info-item">
-          <h3>正在做</h3>
-          <p>PaperBanana、OpenTrad、他山GKD 研究组成员、跨境电商。</p>
-        </article>
-        <article class="info-item">
-          <h3>方法</h3>
-          <p>把产品想法拆成能跑起来的工程系统，再用真实反馈持续校准。</p>
-        </article>
-        <article class="info-item">
-          <h3>联系</h3>
-          <p><a href="mailto:yrjmdqmmx@gmail.com">yrjmdqmmx@gmail.com</a></p>
-        </article>
+      <div class="timeline-list compact">
+        {experienceItems.map((item) => (
+          <article class="timeline-item">
+            <p class="timeline-meta">{item.meta}</p>
+            <h3>{item.title}</h3>
+            <p>{item.copy}</p>
+          </article>
+        ))}
       </div>
     </div>
   </section>

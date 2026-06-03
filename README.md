@@ -2,7 +2,7 @@
 
 赵鼎熠（yrjm）的个人网站，部署到 `zhaodingyi.com`。技术栈是 Astro 6、React islands、React Three Fiber、Tailwind CSS v4 和 GitHub Pages。
 
-当前范围只包含首页、作品页、PaperBanana 项目详情、关于页和 404。没有博客、RSS、评论、搜索和分析工具。
+当前范围包含首页、作品页、项目详情页、关于页和 404。没有博客、RSS、评论、搜索和分析工具。
 
 ## 本地开发
 
@@ -29,10 +29,18 @@ order: 2
 tech:
   - Astro
 repo: https://github.com/example/repo
+demo: https://example.com
+role: 独立开发者
+period: 2026.01 - 至今
+location: 宁波
+status: 进行中
+nodes:
+  - web
+  - api
 featured: false
 ```
 
-目前首页只取 `featured: true` 的项目展示；如果后续要展示多个项目，可以继续增加 markdown 文件。
+首页会重点展示 `featured: true` 的项目，并把其他项目作为补充列表展示；作品页会展示全部项目。
 
 ## GitHub Pages 部署
 

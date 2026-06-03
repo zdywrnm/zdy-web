@@ -6,13 +6,24 @@ export interface Props {
 }
 
 const { project } = Astro.props;
-const { title, description, tech, repo, demo } = project.data;
+const { title, description, tech, repo, demo, role, period, nodes = [] } = project.data;
+const visualTitle = title.includes('PaperBanana')
+  ? ['Paper', 'Banana']
+  : title.split(/[\s/]+/).length > 1
+    ? title.split(/[\s/]+/).slice(0, 2)
+    : [title.slice(0, 4), title.slice(4, 8)].filter(Boolean);
+const visualNodes = nodes.length > 0 ? nodes.slice(0, 4) : tech.slice(0, 4);
 ---
 
 <article class="project-feature">
   <div class="project-content">
     <h3 class="project-title">{title}</h3>
     <p class="project-description">{description}</p>
+    {(role || period) && (
+      <p class="project-meta-line">
+        {[role, period].filter(Boolean).join(' / ')}
+      </p>
+    )}
     <ul class="tech-list" aria-label={`${title} 技术栈`}>
       {tech.map((item) => <li>{item}</li>)}
     </ul>
@@ -27,11 +38,12 @@ const { title, description, tech, repo, demo } = project.data;
       <span class="diagram-orbit"></span>
       <span class="diagram-orbit"></span>
       <span class="diagram-orbit"></span>
-      <span class="diagram-core">Paper<br />Banana</span>
-      <span class="diagram-node web">web</span>
-      <span class="diagram-node desktop">desktop</span>
-      <span class="diagram-node mobile">mobile</span>
-      <span class="diagram-node api">api</span>
+      <span class="diagram-core">
+        {visualTitle.map((part) => <>{part}<br /></>)}
+      </span>
+      {visualNodes.map((node, index) => (
+        <span class={`diagram-node node-${index + 1}`}>{node}</span>
+      ))}
     </div>
   </div>
 </article>

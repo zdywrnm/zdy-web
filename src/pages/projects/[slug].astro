@@ -36,10 +36,34 @@ const { Content } = await render(project);
             <dt>项目</dt>
             <dd>{project.data.title}</dd>
           </div>
+          {project.data.role && (
+            <div>
+              <dt>角色</dt>
+              <dd>{project.data.role}</dd>
+            </div>
+          )}
+          {project.data.period && (
+            <div>
+              <dt>周期</dt>
+              <dd>{project.data.period}</dd>
+            </div>
+          )}
           <div>
             <dt>状态</dt>
-            <dd>进行中</dd>
+            <dd>{project.data.status ?? '进行中'}</dd>
           </div>
+          {project.data.location && (
+            <div>
+              <dt>地点</dt>
+              <dd>{project.data.location}</dd>
+            </div>
+          )}
+          {project.data.demo && (
+            <div>
+              <dt>线上</dt>
+              <dd><a href={project.data.demo} target="_blank" rel="noreferrer">访问网站</a></dd>
+            </div>
+          )}
           {project.data.repo && (
             <div>
               <dt>代码</dt>
