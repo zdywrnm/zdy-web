@@ -1,22 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
-import ProjectCard from '../../components/ProjectCard.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const projects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+import ProjectsContent from '../../components/pages/ProjectsContent.astro';
 ---
 
-<BaseLayout title="作品" description="赵鼎熠（yrjm）的作品项目，包括 PaperBanana 和万里国贸之家网站。">
-  <section class="page-hero">
-    <div class="container">
-      <h1 class="page-title">作品</h1>
-      <p class="page-copy">这里收录我从简历中提炼出来的真实项目：AI 学术配图产品、专业学习平台，以及后续会继续补充的工具链实践。</p>
-    </div>
-  </section>
-
-  <section class="section section-compact">
-    <div class="container project-stack">
-      {projects.map((project) => <ProjectCard project={project} />)}
-    </div>
-  </section>
-</BaseLayout>
+<ProjectsContent lang="zh" />

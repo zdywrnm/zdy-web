@@ -1,0 +1,92 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ui, type Lang } from '../../i18n/ui';
+import type { Project } from '../../lib/projects';
+
+export interface Props {
+  project: Project;
+  lang?: Lang;
+}
+
+const { project, lang = 'zh' } = Astro.props;
+const t = ui[lang].project;
+const { Content } = await render(project);
+const d = project.data;
+---
+
+<BaseLayout title={d.title} description={d.description} lang={lang}>
+  <section class="page-hero">
+    <div class="container">
+      <h1 class="page-title">{d.title}</h1>
+      <p class="page-copy">{d.description}</p>
+      <ul class="tech-list" aria-label={`${d.title} ${t.techStackSuffix}`}>
+        {d.tech.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  {d.cover && (
+    <div class="container">
+      <img
+        class="project-cover project-cover--detail"
+        src={d.cover}
+        alt={`${d.title} ${t.coverAltSuffix}`}
+        width="1440"
+        height="900"
+        loading="eager"
+        decoding="async"
+      />
+    </div>
+  )}
+
+  <section class="section section-compact">
+    <div class="container project-detail">
+      <article class="content-panel prose prose-invert max-w-none">
+        <Content />
+      </article>
+      <aside class="content-panel">
+        <dl class="meta-list">
+          <div>
+            <dt>{t.labelProject}</dt>
+            <dd>{d.title}</dd>
+          </div>
+          {d.role && (
+            <div>
+              <dt>{t.labelRole}</dt>
+              <dd>{d.role}</dd>
+            </div>
+          )}
+          {d.period && (
+            <div>
+              <dt>{t.labelPeriod}</dt>
+              <dd>{d.period}</dd>
+            </div>
+          )}
+          <div>
+            <dt>{t.labelStatus}</dt>
+            <dd>{d.status ?? t.statusDefault}</dd>
+          </div>
+          {d.location && (
+            <div>
+              <dt>{t.labelLocation}</dt>
+              <dd>{d.location}</dd>
+            </div>
+          )}
+          {d.demo && (
+            <div>
+              <dt>{t.labelOnline}</dt>
+              <dd><a href={d.demo} target="_blank" rel="noreferrer">{t.visitSite}</a></dd>
+            </div>
+          )}
+          {d.repo && (
+            <div>
+              <dt>{t.labelCode}</dt>
+              <dd><a href={d.repo} target="_blank" rel="noreferrer">{t.github}</a></dd>
+            </div>
+          )}
+        </dl>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

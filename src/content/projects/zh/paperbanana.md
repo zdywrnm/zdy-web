@@ -12,6 +12,7 @@ tech:
   - pnpm monorepo
 repo: https://github.com/zdywrnm/PaperBanana-clients
 demo: https://paperbanana.asia
+cover: /projects/paperbanana.png
 role: 项目核心开发者
 period: 2026.03 - 至今
 location: 宁波

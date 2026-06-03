@@ -18,7 +18,7 @@
   --surface-solid: #11121e;
   --fg: #ededed;
   --muted: #a4a8b7;
-  --dim: #70758a;
+  --dim: #868ba0;
   --accent: #6366f1;
   --accent-strong: #8b5cf6;
   --cyan: #22d3ee;
@@ -84,6 +84,28 @@ textarea {
 ::selection {
   background: color-mix(in srgb, var(--accent) 42%, transparent);
   color: var(--fg);
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface-solid);
+  color: var(--fg);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .site-shell {
@@ -169,6 +191,14 @@ textarea {
   padding: 0 14px;
   font-size: 0.9rem;
   font-weight: 500;
+}
+
+.lang-switch {
+  min-width: 40px;
+  padding: 0 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
 }
 
 .nav-link:hover,
@@ -445,6 +475,21 @@ textarea {
   display: grid;
   min-height: 350px;
   place-items: center;
+}
+
+.project-cover {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 70px rgba(0, 0, 0, 0.3);
+}
+
+.project-cover--detail {
+  aspect-ratio: 16 / 8;
+  max-height: 540px;
 }
 
 .diagram-panel {

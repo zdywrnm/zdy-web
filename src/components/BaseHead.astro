@@ -1,10 +1,14 @@
 ---
+import { SOCIAL } from '../consts';
+import { toLangPath } from '../i18n/ui';
+
 export interface Props {
   title: string;
   description: string;
   image?: string;
   canonical?: string;
   type?: 'website' | 'article';
+  lang?: 'zh' | 'en';
 }
 
 const {
@@ -13,12 +17,31 @@ const {
   image = '/og.png',
   canonical = Astro.url.pathname,
   type = 'website',
+  lang = 'zh',
 } = Astro.props;
 
 const site = Astro.site ?? new URL('https://zhaodingyi.com');
 const pageTitle = title.includes('赵鼎熠') ? title : `${title} | 赵鼎熠 / yrjm`;
 const canonicalUrl = new URL(canonical, site).toString();
 const imageUrl = new URL(image, site).toString();
+const ogLocale = lang === 'en' ? 'en_US' : 'zh_CN';
+const ogLocaleAlternate = lang === 'en' ? 'zh_CN' : 'en_US';
+
+const zhAltUrl = new URL(toLangPath(Astro.url.pathname, 'zh'), site).toString();
+const enAltUrl = new URL(toLangPath(Astro.url.pathname, 'en'), site).toString();
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: '赵鼎熠',
+  alternateName: 'yrjm',
+  url: site.toString(),
+  jobTitle: '全栈开发 / AI 产品',
+  email: `mailto:${SOCIAL.email}`,
+  sameAs: [SOCIAL.github, SOCIAL.linkedin],
+  alumniOf: { '@type': 'CollegeOrUniversity', name: '浙江万里学院' },
+  knowsAbout: ['全栈开发', 'AI 工具链', '跨境电商', 'Astro', 'React', 'TypeScript'],
+};
 ---
 
 <meta charset="utf-8" />
@@ -26,7 +49,12 @@ const imageUrl = new URL(image, site).toString();
 <meta name="generator" content={Astro.generator} />
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0f" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
 <link rel="canonical" href={canonicalUrl} />
+<link rel="alternate" hreflang="zh-CN" href={zhAltUrl} />
+<link rel="alternate" hreflang="en" href={enAltUrl} />
+<link rel="alternate" hreflang="x-default" href={zhAltUrl} />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta property="og:type" content={type} />
 <meta property="og:site_name" content="赵鼎熠 / yrjm" />
@@ -34,7 +62,10 @@ const imageUrl = new URL(image, site).toString();
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:image" content={imageUrl} />
+<meta property="og:locale" content={ogLocale} />
+<meta property="og:locale:alternate" content={ogLocaleAlternate} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={imageUrl} />
+<script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />

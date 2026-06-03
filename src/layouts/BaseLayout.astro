@@ -9,15 +9,18 @@ export interface Props {
   description: string;
   image?: string;
   canonical?: string;
+  lang?: 'zh' | 'en';
 }
 
-const { title, description, image, canonical } = Astro.props;
+const { title, description, image, canonical, lang = 'zh' } = Astro.props;
+const htmlLang = lang === 'en' ? 'en' : 'zh-CN';
+const skipLabel = lang === 'en' ? 'Skip to content' : '跳到主内容';
 ---
 
 <!doctype html>
-<html lang="zh-CN" class="dark">
+<html lang={htmlLang} class="dark">
   <head>
-    <BaseHead title={title} description={description} image={image} canonical={canonical} />
+    <BaseHead title={title} description={description} image={image} canonical={canonical} lang={lang} />
     <script is:inline>
       const storedTheme = localStorage.getItem('theme');
       const theme = storedTheme ?? 'dark';
@@ -26,20 +29,27 @@ const { title, description, image, canonical } = Astro.props;
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">{skipLabel}</a>
     <div class="site-shell">
-      <Nav />
-      <main>
+      <Nav lang={lang} />
+      <main id="main">
         <slot />
       </main>
       <Footer />
     </div>
     <script is:inline>
       const themeButton = document.querySelector('[data-theme-toggle]');
+      const syncToggle = () => {
+        const isLight = document.documentElement.classList.contains('light');
+        themeButton?.setAttribute('aria-pressed', String(isLight));
+      };
+      syncToggle();
       themeButton?.addEventListener('click', () => {
         const nextTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light';
         document.documentElement.classList.toggle('light', nextTheme === 'light');
         document.documentElement.classList.toggle('dark', nextTheme === 'dark');
         localStorage.setItem('theme', nextTheme);
+        syncToggle();
       });
     </script>
   </body>

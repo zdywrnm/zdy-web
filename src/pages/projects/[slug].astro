@@ -1,77 +1,16 @@
 ---
-import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectDetail from '../../components/pages/ProjectDetail.astro';
+import { getProjectsByLang, projectSlug } from '../../lib/projects';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
+  const projects = await getProjectsByLang('zh');
   return projects.map((project) => ({
-    params: { slug: project.id },
+    params: { slug: projectSlug(project) },
     props: { project },
   }));
 }
 
 const { project } = Astro.props;
-const { Content } = await render(project);
 ---
 
-<BaseLayout title={project.data.title} description={project.data.description}>
-  <section class="page-hero">
-    <div class="container">
-      <h1 class="page-title">{project.data.title}</h1>
-      <p class="page-copy">{project.data.description}</p>
-      <ul class="tech-list" aria-label={`${project.data.title} 技术栈`}>
-        {project.data.tech.map((item) => <li>{item}</li>)}
-      </ul>
-    </div>
-  </section>
-
-  <section class="section section-compact">
-    <div class="container project-detail">
-      <article class="content-panel prose prose-invert max-w-none">
-        <Content />
-      </article>
-      <aside class="content-panel">
-        <dl class="meta-list">
-          <div>
-            <dt>项目</dt>
-            <dd>{project.data.title}</dd>
-          </div>
-          {project.data.role && (
-            <div>
-              <dt>角色</dt>
-              <dd>{project.data.role}</dd>
-            </div>
-          )}
-          {project.data.period && (
-            <div>
-              <dt>周期</dt>
-              <dd>{project.data.period}</dd>
-            </div>
-          )}
-          <div>
-            <dt>状态</dt>
-            <dd>{project.data.status ?? '进行中'}</dd>
-          </div>
-          {project.data.location && (
-            <div>
-              <dt>地点</dt>
-              <dd>{project.data.location}</dd>
-            </div>
-          )}
-          {project.data.demo && (
-            <div>
-              <dt>线上</dt>
-              <dd><a href={project.data.demo} target="_blank" rel="noreferrer">访问网站</a></dd>
-            </div>
-          )}
-          {project.data.repo && (
-            <div>
-              <dt>代码</dt>
-              <dd><a href={project.data.repo} target="_blank" rel="noreferrer">GitHub</a></dd>
-            </div>
-          )}
-        </dl>
-      </aside>
-    </div>
-  </section>
-</BaseLayout>
+<ProjectDetail project={project} lang="zh" />
