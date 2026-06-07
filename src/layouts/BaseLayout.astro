@@ -27,6 +27,16 @@ const skipLabel = lang === 'en' ? 'Skip to content' : '跳到主内容';
       document.documentElement.classList.toggle('light', theme === 'light');
       document.documentElement.classList.toggle('dark', theme !== 'light');
     </script>
+    <script is:inline>
+      // 仅在允许动效时预隐藏内容（配合 global.css），避免进场动画前的闪烁。
+      // 兜底：若动效脚本 2.5s 内未接管，强制显示全部内容，绝不留白。
+      if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        document.documentElement.classList.add('motion-ok');
+        window.__revealFallback = setTimeout(function () {
+          document.documentElement.classList.add('reveal-all');
+        }, 2500);
+      }
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">{skipLabel}</a>
@@ -51,6 +61,10 @@ const skipLabel = lang === 'en' ? 'Skip to content' : '跳到主内容';
         localStorage.setItem('theme', nextTheme);
         syncToggle();
       });
+    </script>
+    <script>
+      import { initReveal } from '../scripts/reveal';
+      initReveal();
     </script>
   </body>
 </html>
