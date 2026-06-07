@@ -861,41 +861,6 @@ textarea {
   }
 }
 
-/* GSAP 进场动效：仅在允许动效（.motion-ok）且兜底未触发时预隐藏，由 reveal.ts 渐入。
-   reduced-motion / 无 JS 时 .motion-ok 不会被加上，内容始终可见。 */
-.motion-ok:not(.reveal-all)
-  :is(
-    .hero-content > *,
-    .section-header,
-    .info-item,
-    .timeline-item,
-    .project-feature,
-    .project-row,
-    .summary-panel,
-    .skill-cloud,
-    .content-panel,
-    .project-cover--detail
-  ) {
-  opacity: 0;
-}
-
-.motion-ok.reveal-all
-  :is(
-    .hero-content > *,
-    .section-header,
-    .info-item,
-    .timeline-item,
-    .project-feature,
-    .project-row,
-    .summary-panel,
-    .skill-cloud,
-    .content-panel,
-    .project-cover--detail
-  ) {
-  opacity: 1 !important;
-  visibility: visible !important;
-}
-
 @media (max-width: 860px) {
   .container {
     width: min(100% - 28px, 1120px);
