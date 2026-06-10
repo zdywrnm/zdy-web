@@ -46,6 +46,10 @@ const skipLabel = lang === 'en' ? 'Skip to content' : '跳到主内容';
         <Footer lang={lang} />
       </div>
     </div>
+    <script>
+      import { initMotion } from '../scripts/motion';
+      initMotion();
+    </script>
     <script is:inline>
       // 主题切换走事件委托：按钮节点在换页后被替换也无需重新绑定
       (() => {
