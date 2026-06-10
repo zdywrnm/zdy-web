@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Nav from '../components/Nav.astro';
@@ -18,43 +19,62 @@ const skipLabel = lang === 'en' ? 'Skip to content' : '跳到主内容';
 ---
 
 <!doctype html>
-<html lang={htmlLang} class="dark">
+<html lang={htmlLang} class="dark" transition:animate="none">
   <head>
     <BaseHead title={title} description={description} image={image} canonical={canonical} lang={lang} />
+    <ClientRouter />
     <script is:inline>
-      const storedTheme = localStorage.getItem('theme');
-      const theme = storedTheme ?? 'dark';
-      document.documentElement.classList.toggle('light', theme === 'light');
-      document.documentElement.classList.toggle('dark', theme !== 'light');
+      // 防 FOUC：首帧前应用主题类；换页（ClientRouter）后 html 属性会被重置，再应用一次
+      (() => {
+        const applyTheme = () => {
+          const theme = localStorage.getItem('theme') ?? 'dark';
+          document.documentElement.classList.toggle('light', theme === 'light');
+          document.documentElement.classList.toggle('dark', theme !== 'light');
+        };
+        applyTheme();
+        document.addEventListener('astro:after-swap', applyTheme);
+      })();
     </script>
   </head>
   <body>
     <a class="skip-link" href="#main">{skipLabel}</a>
-    <div class="site-shell">
-      <Nav lang={lang} />
-      <main id="main">
-        <slot />
-      </main>
-      <Footer />
+    <Nav lang={lang} />
+    <!-- ScrollSmoother（桌面端）滚动容器；未激活时是惰性 div，零影响 -->
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main">
+          <slot />
+        </main>
+        <Footer lang={lang} />
+      </div>
     </div>
-    <script is:inline>
-      const themeButton = document.querySelector('[data-theme-toggle]');
-      const syncToggle = () => {
-        const isLight = document.documentElement.classList.contains('light');
-        themeButton?.setAttribute('aria-pressed', String(isLight));
-      };
-      syncToggle();
-      themeButton?.addEventListener('click', () => {
-        const nextTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light';
-        document.documentElement.classList.toggle('light', nextTheme === 'light');
-        document.documentElement.classList.toggle('dark', nextTheme === 'dark');
-        localStorage.setItem('theme', nextTheme);
-        syncToggle();
-      });
-    </script>
     <script>
-      import { initReveal } from '../scripts/reveal';
-      initReveal();
+      // ClientRouter 生命周期：换页前全量回收（pin/smoother/SplitText/监听器），新页就绪后全量重建。
+      // 模块脚本跨 swap 只执行一次，监听器持续存活；astro:page-load 在首次加载也会触发。
+      import { destroyMotion, initMotion, initTransitions } from '../scripts/motion';
+      initTransitions();
+      document.addEventListener('astro:page-load', initMotion);
+      document.addEventListener('astro:before-swap', destroyMotion);
+    </script>
+    <script is:inline>
+      // 主题切换走事件委托：按钮节点在换页后被替换也无需重新绑定
+      (() => {
+        const syncPressed = () => {
+          const isLight = document.documentElement.classList.contains('light');
+          document.querySelector('[data-theme-toggle]')?.setAttribute('aria-pressed', String(isLight));
+        };
+        syncPressed();
+        document.addEventListener('astro:page-load', syncPressed);
+        document.addEventListener('click', (event) => {
+          const target = event.target instanceof Element ? event.target.closest('[data-theme-toggle]') : null;
+          if (!target) return;
+          const nextTheme = document.documentElement.classList.contains('light') ? 'dark' : 'light';
+          localStorage.setItem('theme', nextTheme);
+          document.documentElement.classList.toggle('light', nextTheme === 'light');
+          document.documentElement.classList.toggle('dark', nextTheme !== 'light');
+          syncPressed();
+        });
+      })();
     </script>
   </body>
 </html>

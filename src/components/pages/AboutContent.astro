@@ -13,88 +13,100 @@ const a = t.about;
 ---
 
 <BaseLayout title={t.meta.about.title} description={t.meta.about.desc} lang={lang}>
-  <section class="page-hero">
+  <section class="page-head">
     <div class="container">
+      <span class="page-kicker mono-label">{a.kicker}</span>
       <h1 class="page-title">{a.pageTitle}</h1>
       <p class="page-copy">{a.pageCopy}</p>
     </div>
   </section>
 
-  <section class="section section-compact">
+  <section class="panel">
+    <span class="ghost" aria-hidden="true" data-speed="-1.2">SUMMARY</span>
     <div class="container">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">{a.summaryTitle}</h2>
-          <p class="section-copy">{a.summaryCopy}</p>
-        </div>
-      </div>
-      <div class="summary-panel">
-        <ul class="summary-list">
-          {a.summaryItems.map((item) => <li>{item}</li>)}
-        </ul>
+      <header class="rule-header">
+        <span class="mono-label">{a.rules.summary[0]}</span>
+        <span class="mono-label">{a.rules.summary[1]}</span>
+      </header>
+      <p class="manifesto">{a.summaryCopy}</p>
+      <div>
+        {a.summaryItems.map((item, i) => (
+          <div class="summary-row">
+            <span class="mono-label">00{i + 1}</span>
+            <span>{item}</span>
+          </div>
+        ))}
       </div>
     </div>
   </section>
 
-  <section id="experience" class="section section-compact">
+  <section id="experience" class="panel">
+    <span class="ghost" aria-hidden="true" data-speed="-1.2">PATH</span>
     <div class="container">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">{a.experienceTitle}</h2>
-          <p class="section-copy">{a.experienceCopy}</p>
-        </div>
-      </div>
-      <div class="timeline-list">
+      <header class="rule-header">
+        <span class="mono-label">{a.rules.path[0]}</span>
+        <span class="mono-label">{a.rules.path[1]}</span>
+      </header>
+      <p class="rule-copy">{a.experienceCopy}</p>
+      <div class="timeline">
+        <span class="timeline-rail" aria-hidden="true"></span>
         {a.experienceItems.map((item) => (
-          <article class="timeline-item">
-            <p class="timeline-kind">{item.kind}</p>
-            <div class="timeline-head">
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.role}</p>
-              </div>
+          <article class="timeline-entry">
+            <div class="timeline-entry-head mono-label">
+              <span>{item.kind}</span>
               <span>{item.meta}</span>
             </div>
-            <p>{item.detail}</p>
+            <h3>{item.title}</h3>
+            <p class="role">{item.role}</p>
+            <p class="detail">{item.detail}</p>
           </article>
         ))}
       </div>
     </div>
   </section>
 
-  <section class="section section-compact">
+  <section class="panel">
+    <span class="ghost" aria-hidden="true" data-speed="-1.2">STACK</span>
     <div class="container">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">{a.skillsTitle}</h2>
-          <p class="section-copy">{a.skillsCopy}</p>
-        </div>
-      </div>
-      <ul class="skill-cloud" aria-label={a.skillsTitle}>
-        {a.skills.map((skill) => <li>{skill}</li>)}
+      <header class="rule-header">
+        <span class="mono-label">{a.rules.stack[0]}</span>
+        <span class="mono-label">{a.rules.stack[1]}</span>
+      </header>
+      <p class="rule-copy">{a.skillsCopy}</p>
+      <ul class="stack-grid" aria-label={a.skillsTitle}>
+        {a.skills.map((skill) => <li class="stack-tag">{skill}</li>)}
       </ul>
     </div>
   </section>
 
-  <section class="section section-compact">
-    <div class="container info-grid">
-      <article class="info-item">
-        <h3>{a.nowTitle}</h3>
-        <p>{a.now}</p>
-      </article>
-      <article class="info-item">
-        <h3>{a.interestTitle}</h3>
-        <p>{a.interest}</p>
-      </article>
-      <article class="info-item">
-        <h3>{a.contactTitle}</h3>
-        <p>
-          <a href={SOCIAL.github} target="_blank" rel="noreferrer">GitHub @zdywrnm</a><br />
-          <a href={SOCIAL.linkedin} target="_blank" rel="noreferrer">LinkedIn</a><br />
-          <a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a><br />
-          <a href={RESUME_PATH} download>{a.resumeLink}</a>
-        </p>
-      </article>
+  <section class="panel">
+    <div class="container">
+      <header class="rule-header">
+        <span class="mono-label">{a.rules.now[0]}</span>
+        <span class="mono-label">{a.rules.now[1]}</span>
+      </header>
+      <div class="focus-grid">
+        <article class="focus-card">
+          <span class="focus-card-index mono-label">001</span>
+          <h3>{a.nowTitle}</h3>
+          <p>{a.now}</p>
+        </article>
+        <article class="focus-card">
+          <span class="focus-card-index mono-label">002</span>
+          <h3>{a.interestTitle}</h3>
+          <p>{a.interest}</p>
+        </article>
+        <article class="focus-card">
+          <span class="focus-card-index mono-label">003</span>
+          <h3>{a.contactTitle}</h3>
+          <p>
+            <a class="mono-link" href={SOCIAL.github} target="_blank" rel="noreferrer">GitHub @zdywrnm</a><br />
+            <a class="mono-link" href={SOCIAL.linkedin} target="_blank" rel="noreferrer">LinkedIn</a><br />
+            <a class="mono-link" href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a><br />
+            <a class="mono-link" href={RESUME_PATH} download>{a.resumeLink}</a>
+          </p>
+        </article>
+      </div>
     </div>
   </section>
 </BaseLayout>

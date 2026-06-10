@@ -1,8 +1,9 @@
 ---
-import ProjectCard from '../ProjectCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import HeroBackground from '../hero/HeroBackground';
 import HeroFallback from '../hero/HeroFallback.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import StatStrip from '../StatStrip.astro';
+import TickerStrip from '../TickerStrip.astro';
 import { RESUME_PATH, SOCIAL } from '../../consts';
 import { ui, localizePath, type Lang } from '../../i18n/ui';
 import { getProjectsByLang, projectHref } from '../../lib/projects';
@@ -15,42 +16,55 @@ const { lang = 'zh' } = Astro.props;
 const t = ui[lang];
 
 const projects = await getProjectsByLang(lang);
-const featuredProject = projects.find((project) => project.data.featured) ?? projects[0];
-const otherProjects = projects.filter((project) => project.id !== featuredProject.id).slice(0, 2);
 
 const aboutHref = localizePath('/about/', lang);
 const experienceHref = localizePath('/about/#experience', lang);
 const projectsHref = localizePath('/projects/', lang);
+
+// 无封面项目的样张降级：取标题首词做铅字
+const specimenWord = (title: string) => {
+  const latin = title.split(/[\s/·]+/).find((part) => /^[\w-]+$/.test(part));
+  return latin ?? title.replace(/[·\s].*$/, '').slice(0, 4);
+};
 ---
 
 <BaseLayout title={t.meta.home.title} description={t.meta.home.desc} lang={lang}>
-  <section class="hero-section">
+  <section class="hero">
     <HeroFallback />
     <HeroBackground client:only="react" />
-    <div class="hero-content">
-      <h1 class="hero-title">{t.hero.title}</h1>
-      <p class="hero-subtitle">{t.hero.subtitle}</p>
+    <div class="container">
+      <p class="hero-kicker mono-label">{t.hero.kicker}</p>
+      <h1 class:list={['hero-title', lang === 'en' && 'hero-title--en']}>{t.hero.display}</h1>
+      <div class="hero-sub-row">
+        <p class="hero-deco mono-label" data-scramble>{t.hero.next}</p>
+        <p class="hero-subtitle">{t.hero.subtitle}</p>
+      </div>
       <div class="hero-actions">
-        <a class="button button-primary" href="#projects">{t.hero.seeWork}</a>
-        <a class="button button-secondary" href={experienceHref}>{t.hero.seeExperience}</a>
-        <a class="button button-secondary" href={RESUME_PATH} download>{t.hero.downloadResume}</a>
+        <a class="button button-primary" href="#projects" data-magnetic>{t.hero.seeWork}</a>
+        <a class="button" href={experienceHref} data-magnetic>{t.hero.seeExperience}</a>
+        <a class="button" href={RESUME_PATH} download data-magnetic>{t.hero.downloadResume}</a>
       </div>
     </div>
-    <div class="hero-next" aria-hidden="true">{t.hero.next}</div>
+    <div class="hero-side mono-label" aria-hidden="true">{t.common.scrollHint}</div>
   </section>
 
-  <section class="section section-compact">
+  <TickerStrip lang={lang} />
+
+  <section class="panel">
+    <span class="ghost" aria-hidden="true" data-speed="-1.2">FOCUS</span>
     <div class="container">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">{t.home.positioningTitle}</h2>
-          <p class="section-copy">{t.home.positioningCopy}</p>
-        </div>
-        <a class="button button-secondary" href={aboutHref}>{t.home.fullProfile}</a>
-      </div>
-      <div class="info-grid">
-        {t.home.capabilities.map((item) => (
-          <article class="info-item">
+      <header class="rule-header">
+        <span class="mono-label">{t.home.rules.focus[0]}</span>
+        <span class="rule-aside">
+          <a class="mono-link" href={aboutHref}>{t.home.fullProfile} →</a>
+          <span class="mono-label">{t.home.rules.focus[1]}</span>
+        </span>
+      </header>
+      <p class="rule-copy">{t.home.positioningCopy}</p>
+      <div class="focus-grid">
+        {t.home.capabilities.map((item, i) => (
+          <article class="focus-card">
+            <span class="focus-card-index mono-label">00{i + 1}</span>
             <h3>{item.title}</h3>
             <p>{item.copy}</p>
           </article>
@@ -59,45 +73,81 @@ const projectsHref = localizePath('/projects/', lang);
     </div>
   </section>
 
-  <section id="projects" class="section">
-    <div class="container">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">{t.home.worksTitle}</h2>
-          <p class="section-copy">{t.home.worksCopy}</p>
-        </div>
-        <a class="button button-secondary" href={projectsHref}>{t.home.allWorks}</a>
+  <section id="projects" class="panel work-panel">
+    <div class="work-shell">
+      <div class="container">
+        <header class="rule-header">
+          <span class="mono-label">{t.home.rules.work[0]}</span>
+          <span class="rule-aside">
+            <a class="mono-link" href={projectsHref}>{t.home.allWorks} →</a>
+            <span class="mono-label">{t.home.rules.work[1]}</span>
+          </span>
+        </header>
       </div>
-      <ProjectCard project={featuredProject} lang={lang} />
-      {otherProjects.length > 0 && (
-        <div class="project-list">
-          {otherProjects.map((project) => (
-            <a class="project-row" href={projectHref(project)}>
-              <span>
-                <strong>{project.data.title}</strong>
-                <small>{project.data.description}</small>
-              </span>
-              <span>{project.data.period}</span>
+      <div class="work-gallery">
+        <div class="work-track">
+          {projects.map((project, i) => (
+            <a class:list={['work-card', project.data.featured && 'work-card--featured']} href={projectHref(project)}>
+              <span class="work-card-num" aria-hidden="true">0{i + 1}</span>
+              {project.data.cover ? (
+                <div class="work-card-media">
+                  <img
+                    src={project.data.cover}
+                    alt={`${project.data.title} ${t.project.coverAltSuffix}`}
+                    width="1440"
+                    height="900"
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                </div>
+              ) : (
+                <div class="work-card-media specimen" aria-hidden="true">
+                  <span class="specimen-word">{specimenWord(project.data.title)}</span>
+                  <span class="specimen-nodes">{(project.data.nodes ?? project.data.tech).slice(0, 4).join(' / ')}</span>
+                </div>
+              )}
+              <div class="work-card-body">
+                <h3>{project.data.title}</h3>
+                <p>{project.data.description}</p>
+                <span class="work-card-meta mono-label">
+                  <span>{project.data.tech.slice(0, 4).join(' · ')}</span>
+                  {project.data.period && <span>{project.data.period}</span>}
+                </span>
+              </div>
             </a>
           ))}
+          <a class="work-card work-card--more" href={projectsHref}>{t.home.allWorks} →</a>
         </div>
-      )}
+      </div>
     </div>
   </section>
 
-  <section class="section section-compact">
+  <section class="panel">
+    <span class="ghost" aria-hidden="true" data-speed="-1.2">PROOF</span>
     <div class="container">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">{t.home.experienceTitle}</h2>
-          <p class="section-copy">{t.home.experienceCopy}</p>
-        </div>
-        <a class="button button-secondary" href={experienceHref}>{t.home.moreExperience}</a>
-      </div>
-      <div class="timeline-list compact">
+      <header class="rule-header">
+        <span class="mono-label">{t.home.rules.proof[0]}</span>
+        <span class="mono-label">{t.home.rules.proof[1]}</span>
+      </header>
+      <StatStrip lang={lang} />
+    </div>
+  </section>
+
+  <section class="panel">
+    <span class="ghost" aria-hidden="true" data-speed="-1.2">PATH</span>
+    <div class="container">
+      <header class="rule-header">
+        <span class="mono-label">{t.home.rules.path[0]}</span>
+        <span class="rule-aside">
+          <a class="mono-link" href={experienceHref}>{t.home.moreExperience} →</a>
+          <span class="mono-label">{t.home.rules.path[1]}</span>
+        </span>
+      </header>
+      <p class="rule-copy">{t.home.experienceCopy}</p>
+      <div class="path-grid">
         {t.home.experiences.map((item) => (
-          <article class="timeline-item">
-            <p class="timeline-meta">{item.meta}</p>
+          <article class="path-card">
+            <span class="mono-label">{item.meta}</span>
             <h3>{item.title}</h3>
             <p>{item.copy}</p>
           </article>
@@ -106,30 +156,22 @@ const projectsHref = localizePath('/projects/', lang);
     </div>
   </section>
 
-  <section id="contact" class="section section-compact">
+  <section id="contact" class="panel">
     <div class="container">
-      <div class="section-header">
-        <div>
-          <h2 class="section-title">{t.home.contactTitle}</h2>
-          <p class="section-copy">{t.home.contactCopy}</p>
-        </div>
-      </div>
-      <div class="info-grid">
-        <article class="info-item">
-          <h3>{t.home.emailLabel}</h3>
-          <p><a href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a></p>
-        </article>
-        <article class="info-item">
-          <h3>{t.home.linksLabel}</h3>
-          <p>
-            <a href={SOCIAL.github} target="_blank" rel="noreferrer">GitHub @zdywrnm</a><br />
-            <a href={SOCIAL.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-          </p>
-        </article>
-        <article class="info-item">
-          <h3>{t.home.resumeLabel}</h3>
-          <p><a href={RESUME_PATH} download>{t.home.downloadResumePdf}</a></p>
-        </article>
+      <header class="rule-header">
+        <span class="mono-label">{t.home.rules.contact[0]}</span>
+        <span class="mono-label">{t.home.rules.contact[1]}</span>
+      </header>
+      <p class="rule-copy">{t.home.contactCopy}</p>
+      <a class="contact-cta" href={`mailto:${SOCIAL.email}`}>
+        <span class="contact-cta-text">{t.home.contactCta}</span>
+        <span class="contact-cta-arrow" aria-hidden="true">→</span>
+      </a>
+      <div class="contact-meta">
+        <a class="mono-link" href={`mailto:${SOCIAL.email}`}>{SOCIAL.email}</a>
+        <a class="mono-link" href={SOCIAL.github} target="_blank" rel="noreferrer">GitHub @zdywrnm</a>
+        <a class="mono-link" href={SOCIAL.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+        <a class="mono-link" href={RESUME_PATH} download>{t.home.downloadResumePdf}</a>
       </div>
     </div>
   </section>

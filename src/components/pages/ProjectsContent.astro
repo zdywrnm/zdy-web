@@ -1,8 +1,7 @@
 ---
-import ProjectCard from '../ProjectCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { ui, type Lang } from '../../i18n/ui';
-import { getProjectsByLang } from '../../lib/projects';
+import { getProjectsByLang, projectHref } from '../../lib/projects';
 
 export interface Props {
   lang?: Lang;
@@ -11,19 +10,47 @@ export interface Props {
 const { lang = 'zh' } = Astro.props;
 const t = ui[lang];
 const projects = await getProjectsByLang(lang);
+
+const yearOf = (period?: string) => period?.slice(0, 4) ?? '';
 ---
 
 <BaseLayout title={t.meta.projects.title} description={t.meta.projects.desc} lang={lang}>
-  <section class="page-hero">
+  <section class="page-head">
     <div class="container">
+      <span class="page-kicker mono-label">{t.projects.kicker}</span>
       <h1 class="page-title">{t.projects.title}</h1>
       <p class="page-copy">{t.projects.copy}</p>
     </div>
   </section>
 
-  <section class="section section-compact">
-    <div class="container project-stack">
-      {projects.map((project) => <ProjectCard project={project} lang={lang} />)}
+  <section class="panel" style="padding-top: 24px;">
+    <span class="ghost" aria-hidden="true" data-speed="-1.2">INDEX</span>
+    <div class="container">
+      <ol class="index-list">
+        {projects.map((project, i) => (
+          <li>
+            <a class="index-row" href={projectHref(project)} data-preview={project.data.cover}>
+              <span class="index-num">00{i + 1}</span>
+              <span class="index-title">{project.data.title}</span>
+              <span class="index-meta">{project.data.tech.slice(0, 3).join(' · ')}</span>
+              <span class="index-year">{yearOf(project.data.period)}</span>
+              {project.data.cover && (
+                <img
+                  class="index-thumb"
+                  src={project.data.cover}
+                  alt={`${project.data.title} ${t.project.coverAltSuffix}`}
+                  width="1440"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+            </a>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
+
+  <div class="index-preview" aria-hidden="true"><img alt="" /></div>
 </BaseLayout>

@@ -1,0 +1,20 @@
+---
+import { ui, type Lang } from '../i18n/ui';
+
+export interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'zh' } = Astro.props;
+const stats = ui[lang].home.stats;
+---
+
+<div class="stat-grid">
+  {stats.map((stat) => (
+    <div class="stat">
+      <span class="stat-value" data-stat>{stat.value}</span>
+      <span class="stat-label">{stat.label}</span>
+      <span class="stat-tag mono-label">{stat.tag}</span>
+    </div>
+  ))}
+</div>

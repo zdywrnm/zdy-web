@@ -2,7 +2,7 @@
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { ui, type Lang } from '../../i18n/ui';
-import type { Project } from '../../lib/projects';
+import { getProjectsByLang, projectHref, projectSlug, type Project } from '../../lib/projects';
 
 export interface Props {
   project: Project;
@@ -13,13 +13,56 @@ const { project, lang = 'zh' } = Astro.props;
 const t = ui[lang].project;
 const { Content } = await render(project);
 const d = project.data;
+
+// 底部「下一个项目」：按 order 顺序取下一个，循环
+const projects = await getProjectsByLang(lang);
+const idx = projects.findIndex((p) => p.id === project.id);
+const next = projects[(idx + 1) % projects.length];
+const hasNext = projects.length > 1 && next.id !== project.id;
 ---
 
 <BaseLayout title={d.title} description={d.description} lang={lang}>
-  <section class="page-hero">
+  <section class="page-head">
     <div class="container">
+      <span class="page-kicker mono-label">WORK / {projectSlug(project).toUpperCase()}</span>
       <h1 class="page-title">{d.title}</h1>
       <p class="page-copy">{d.description}</p>
+      <dl class="detail-meta">
+        {d.role && (
+          <div>
+            <dt>{t.labelRole}</dt>
+            <dd>{d.role}</dd>
+          </div>
+        )}
+        {d.period && (
+          <div>
+            <dt>{t.labelPeriod}</dt>
+            <dd>{d.period}</dd>
+          </div>
+        )}
+        <div>
+          <dt>{t.labelStatus}</dt>
+          <dd>{d.status ?? t.statusDefault}</dd>
+        </div>
+        {d.location && (
+          <div>
+            <dt>{t.labelLocation}</dt>
+            <dd>{d.location}</dd>
+          </div>
+        )}
+        {d.demo && (
+          <div>
+            <dt>{t.labelOnline}</dt>
+            <dd><a class="mono-link" href={d.demo} target="_blank" rel="noreferrer">{t.visitSite} ↗</a></dd>
+          </div>
+        )}
+        {d.repo && (
+          <div>
+            <dt>{t.labelCode}</dt>
+            <dd><a class="mono-link" href={d.repo} target="_blank" rel="noreferrer">{t.github} ↗</a></dd>
+          </div>
+        )}
+      </dl>
       <ul class="tech-list" aria-label={`${d.title} ${t.techStackSuffix}`}>
         {d.tech.map((item) => <li>{item}</li>)}
       </ul>
@@ -28,65 +71,32 @@ const d = project.data;
 
   {d.cover && (
     <div class="container">
-      <img
-        class="project-cover project-cover--detail"
-        src={d.cover}
-        alt={`${d.title} ${t.coverAltSuffix}`}
-        width="1440"
-        height="900"
-        loading="eager"
-        decoding="async"
-      />
+      <div class="media-frame">
+        <img
+          src={d.cover}
+          alt={`${d.title} ${t.coverAltSuffix}`}
+          width="1440"
+          height="900"
+          loading="eager"
+          decoding="async"
+          data-parallax-cover
+        />
+      </div>
     </div>
   )}
 
-  <section class="section section-compact">
-    <div class="container project-detail">
-      <article class="content-panel prose prose-invert max-w-none">
+  <section class="panel">
+    <div class="container">
+      <article class="prose prose-invert">
         <Content />
       </article>
-      <aside class="content-panel">
-        <dl class="meta-list">
-          <div>
-            <dt>{t.labelProject}</dt>
-            <dd>{d.title}</dd>
-          </div>
-          {d.role && (
-            <div>
-              <dt>{t.labelRole}</dt>
-              <dd>{d.role}</dd>
-            </div>
-          )}
-          {d.period && (
-            <div>
-              <dt>{t.labelPeriod}</dt>
-              <dd>{d.period}</dd>
-            </div>
-          )}
-          <div>
-            <dt>{t.labelStatus}</dt>
-            <dd>{d.status ?? t.statusDefault}</dd>
-          </div>
-          {d.location && (
-            <div>
-              <dt>{t.labelLocation}</dt>
-              <dd>{d.location}</dd>
-            </div>
-          )}
-          {d.demo && (
-            <div>
-              <dt>{t.labelOnline}</dt>
-              <dd><a href={d.demo} target="_blank" rel="noreferrer">{t.visitSite}</a></dd>
-            </div>
-          )}
-          {d.repo && (
-            <div>
-              <dt>{t.labelCode}</dt>
-              <dd><a href={d.repo} target="_blank" rel="noreferrer">{t.github}</a></dd>
-            </div>
-          )}
-        </dl>
-      </aside>
+
+      {hasNext && (
+        <a class="next-project" href={projectHref(next)}>
+          <span class="mono-label">{t.nextProject}</span>
+          <span class="next-project-title">{next.data.title} →</span>
+        </a>
+      )}
     </div>
   </section>
 </BaseLayout>

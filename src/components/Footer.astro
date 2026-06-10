@@ -1,14 +1,24 @@
 ---
 import { RESUME_PATH, SOCIAL } from '../consts';
+import { ui, type Lang } from '../i18n/ui';
+
+export interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'zh' } = Astro.props;
+const t = ui[lang];
 ---
 
 <footer class="site-footer">
-  <div class="container footer-inner">
-    <span>© {new Date().getFullYear()} 赵鼎熠 / yrjm</span>
+  <div class="footer-wordmark" aria-hidden="true" data-speed="-0.6">赵鼎熠—ZHAO DINGYI</div>
+  <div class="container footer-grid mono-label">
+    <span>© {new Date().getFullYear()} 赵鼎熠 / YRJM</span>
     <div class="footer-links">
-      <a href={SOCIAL.github} target="_blank" rel="noreferrer">GitHub</a>
-      <a href={SOCIAL.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-      <a href={RESUME_PATH} download>简历</a>
+      <a class="mono-link" href={SOCIAL.github} target="_blank" rel="noreferrer">GitHub</a>
+      <a class="mono-link" href={SOCIAL.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+      <a class="mono-link" href={RESUME_PATH} download>{lang === 'en' ? 'CV' : '简历'}</a>
     </div>
+    <a class="mono-link footer-top" href="#" data-back-to-top aria-label={t.common.backToTop}>{t.common.backToTop} ↑</a>
   </div>
 </footer>
