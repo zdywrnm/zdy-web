@@ -43,34 +43,35 @@ function splitRise(
 }
 
 /** 内页页头：标题逐字 + kicker/导语跟进。 */
-function initPageHead(): Cleanup {
+function initPageHead(wait = 0): Cleanup {
   const title = document.querySelector<HTMLElement>('.page-title');
   if (!title) return noop;
-  const cleanup = splitRise(title, { stagger: 0.035, delay: 0.1 });
+  const cleanup = splitRise(title, { stagger: 0.035, delay: wait + 0.1 });
   const followers = gsap.utils.toArray<HTMLElement>('.page-kicker, .page-copy');
   if (followers.length) {
-    gsap.from(followers, { autoAlpha: 0, y: 18, duration: 0.8, ease: EASE_OUT, stagger: 0.1, delay: 0.4 });
+    gsap.from(followers, { autoAlpha: 0, y: 18, duration: 0.8, ease: EASE_OUT, stagger: 0.1, delay: wait + 0.4 });
   }
   return cleanup;
 }
 
-export function initHero(): Cleanup {
+/** @param wait 额外顺延（preloader 揭幕时巨字正好开始升起） */
+export function initHero(wait = 0): Cleanup {
   const title = document.querySelector<HTMLElement>('.hero-title');
-  if (!title) return initPageHead();
+  if (!title) return initPageHead(wait);
 
-  const cleanups: Cleanup[] = [splitRise(title, { stagger: 0.05, delay: 0.15 })];
+  const cleanups: Cleanup[] = [splitRise(title, { stagger: 0.05, delay: wait + 0.15 })];
 
-  gsap.from('.hero-kicker', { autoAlpha: 0, y: 18, duration: 0.7, ease: EASE_OUT, delay: 0.1 });
+  gsap.from('.hero-kicker', { autoAlpha: 0, y: 18, duration: 0.7, ease: EASE_OUT, delay: wait + 0.1 });
   const followers = gsap.utils.toArray<HTMLElement>('.hero-subtitle, .hero-actions > *');
   if (followers.length) {
-    gsap.from(followers, { autoAlpha: 0, y: 24, duration: 0.9, ease: EASE_OUT, stagger: 0.08, delay: 0.55 });
+    gsap.from(followers, { autoAlpha: 0, y: 24, duration: 0.9, ease: EASE_OUT, stagger: 0.08, delay: wait + 0.55 });
   }
 
   // mono 装饰行乱码解码（拉丁字符，双语相同；含中文的文本禁用 scramble）
   const deco = document.querySelector<HTMLElement>('[data-scramble]');
   if (deco) {
     const text = deco.textContent ?? '';
-    gsap.to(deco, { duration: 1.4, delay: 0.7, scrambleText: { text, chars: SCRAMBLE_CHARS, speed: 0.4 } });
+    gsap.to(deco, { duration: 1.4, delay: wait + 0.7, scrambleText: { text, chars: SCRAMBLE_CHARS, speed: 0.4 } });
   }
 
   // 滚动退场：入场动子元素、退场动容器，互不抢 transform

@@ -11,6 +11,7 @@ import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 
 import { DESKTOP, MOTION_OK, type Cleanup } from './tokens';
 import { initHero } from './hero';
+import { initPreloader } from './preloader';
 import { initScrollScenes } from './scroll';
 import { initTicker } from './ticker';
 import { initGallery } from './gallery';
@@ -38,7 +39,15 @@ export function initMotion(): void {
   mm = gsap.matchMedia();
 
   mm.add(MOTION_OK, () => {
-    const cleanups = [initHero(), initScrollScenes(), initTicker(), initNavProgress(), initAnchors()];
+    const preloader = initPreloader();
+    const cleanups = [
+      preloader.cleanup,
+      initHero(preloader.delay),
+      initScrollScenes(),
+      initTicker(),
+      initNavProgress(),
+      initAnchors(),
+    ];
     const onLoad = () => ScrollTrigger.refresh();
     window.addEventListener('load', onLoad);
     return () => {
@@ -59,3 +68,5 @@ export function destroyMotion(): void {
   mm?.revert();
   mm = null;
 }
+
+export { initTransitions } from './transitions';
