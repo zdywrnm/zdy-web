@@ -87,17 +87,31 @@ function ParticleRing({ color, opacity, offset = 0 }: { color: string; opacity: 
 
 export default function HeroBackground() {
   const [ready, setReady] = useState(false);
+  const [frameloop, setFrameloop] = useState<'always' | 'never'>('always');
 
   useEffect(() => {
     // 仅在支持 WebGL 且用户未要求减少动效时挂载 3D；否则露出 HeroFallback 静态渐变。
     setReady(hasWebGL() && !prefersReducedMotion());
   }, []);
 
+  useEffect(() => {
+    // 英雄区滚出视口后暂停渲染循环，滚动中不为看不见的画布烧帧
+    if (!ready) return;
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    const io = new IntersectionObserver(([entry]) => {
+      setFrameloop(entry?.isIntersecting ? 'always' : 'never');
+    });
+    io.observe(hero);
+    return () => io.disconnect();
+  }, [ready]);
+
   if (!ready) return null;
 
   return (
     <Canvas
       className="hero-canvas"
+      frameloop={frameloop}
       dpr={[1, 2]}
       camera={{ position: [0, 0, 7.4], fov: 44 }}
       gl={{ alpha: true, antialias: true, powerPreference: 'high-performance' }}
