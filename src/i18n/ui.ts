@@ -27,19 +27,36 @@ export function toLangPath(pathname: string, target: Lang): string {
 
 export const ui = {
   zh: {
+    common: { backToTop: '回到顶部', scrollHint: 'SCROLL' },
     nav: { work: '作品', experience: '经历', about: '关于', themeToggle: '切换主题', langSwitch: 'EN' },
     hero: {
       title: '赵鼎熠 / yrjm',
+      display: '赵鼎熠',
+      kicker: 'PORTFOLIO — 2026 · NINGBO',
       subtitle: '国际经济与贸易在读，用 AI 工具链做全栈产品，也关注跨境电商与市场营销。',
       seeWork: '看作品',
       seeExperience: '看经历',
       downloadResume: '下载简历',
-      next: 'full-stack / commerce',
+      next: 'full-stack / commerce — b.2006 — Ningbo',
     },
     home: {
       positioningTitle: '定位',
       positioningCopy: '求职方向：全栈开发、市场营销。目标城市：北京、上海、深圳、杭州、宁波。',
       fullProfile: '完整资料',
+      rules: {
+        focus: ['01 / 定位', 'FOCUS'],
+        work: ['02 / 作品', 'WORK'],
+        proof: ['03 / 数字', 'PROOF'],
+        path: ['04 / 经历', 'PATH'],
+        contact: ['05 / 联系', 'CONTACT'],
+      },
+      stats: [
+        { value: '05', label: '端产品独立交付', tag: 'PLATFORMS' },
+        { value: '50%', label: '招聘周期缩短', tag: 'FASTER HIRING' },
+        { value: '03', label: '在研项目', tag: 'IN FLIGHT' },
+        { value: '2029', label: '预计毕业', tag: 'GRADUATION' },
+      ],
+      contactCta: '和我聊聊',
       capabilities: [
         { title: 'AI 全栈交付', copy: '熟练用 Claude Code、Codex、Cursor 等 AI 工具完成需求拆解、编码调试到部署上线的完整闭环。' },
         { title: '商业场景理解', copy: '国际经济与贸易专业在读，关注跨境电商、市场营销和产品增长，能把工程能力落到真实业务问题上。' },
@@ -64,6 +81,13 @@ export const ui = {
     },
     about: {
       pageTitle: '关于赵鼎熠',
+      kicker: 'PROFILE — 关于',
+      rules: {
+        summary: ['01 / 个人总结', 'SUMMARY'],
+        path: ['02 / 经历', 'PATH'],
+        stack: ['03 / 技能', 'STACK'],
+        now: ['04 / 状态', 'NOW'],
+      },
       pageCopy: 'yrjm，浙江万里学院国际经济与贸易专业在读，常驻宁波。求职方向是全栈开发和市场营销，目标城市包括北京、上海、深圳、杭州、宁波。',
       summaryTitle: '个人总结',
       summaryCopy: '我的优势是把 AI 工具链、工程实现和商业问题放在同一张图里看。',
@@ -92,10 +116,12 @@ export const ui = {
     },
     projects: {
       title: '作品',
+      kicker: 'INDEX — 全部作品',
       copy: '这里收录我从简历中提炼出来的真实项目：AI 学术配图产品、专业学习平台，以及后续会继续补充的工具链实践。',
     },
     project: {
       learnMore: '了解更多',
+      nextProject: '下一个项目',
       techStackSuffix: '技术栈',
       coverAltSuffix: '产品界面截图',
       labelProject: '项目',
@@ -118,19 +144,36 @@ export const ui = {
     },
   },
   en: {
+    common: { backToTop: 'Back to top', scrollHint: 'SCROLL' },
     nav: { work: 'Work', experience: 'Experience', about: 'About', themeToggle: 'Toggle theme', langSwitch: '中' },
     hero: {
       title: '赵鼎熠 / yrjm',
+      display: 'ZHAO DINGYI',
+      kicker: 'PORTFOLIO — 2026 · NINGBO',
       subtitle: 'An International Economics & Trade student building full-stack products with an AI tool-chain — also into cross-border e-commerce and marketing.',
       seeWork: 'View work',
       seeExperience: 'View experience',
       downloadResume: 'Download CV',
-      next: 'full-stack / commerce',
+      next: 'full-stack / commerce — b.2006 — Ningbo',
     },
     home: {
       positioningTitle: 'Positioning',
       positioningCopy: 'Target roles: full-stack development and marketing. Target cities: Beijing, Shanghai, Shenzhen, Hangzhou, Ningbo.',
       fullProfile: 'Full profile',
+      rules: {
+        focus: ['01 / Focus', '定位'],
+        work: ['02 / Work', '作品'],
+        proof: ['03 / Proof', '数字'],
+        path: ['04 / Path', '经历'],
+        contact: ['05 / Contact', '联系'],
+      },
+      stats: [
+        { value: '05', label: 'platforms shipped solo', tag: 'PLATFORMS' },
+        { value: '50%', label: 'shorter hiring cycle', tag: 'FASTER HIRING' },
+        { value: '03', label: 'projects in flight', tag: 'IN FLIGHT' },
+        { value: '2029', label: 'expected graduation', tag: 'GRADUATION' },
+      ],
+      contactCta: "LET'S TALK",
       capabilities: [
         { title: 'AI full-stack delivery', copy: 'Fluent with Claude Code, Codex and Cursor to run the full loop — from breaking down requirements to coding, debugging, deploying and shipping.' },
         { title: 'Business sense', copy: 'An International Economics & Trade student focused on cross-border e-commerce, marketing and product growth, grounding engineering in real business problems.' },
@@ -155,6 +198,13 @@ export const ui = {
     },
     about: {
       pageTitle: 'About Zhao Dingyi',
+      kicker: 'PROFILE — ABOUT',
+      rules: {
+        summary: ['01 / Summary', '总结'],
+        path: ['02 / Path', '经历'],
+        stack: ['03 / Stack', '技能'],
+        now: ['04 / Now', '状态'],
+      },
       pageCopy: 'yrjm — an International Economics & Trade student at Zhejiang Wanli University, based in Ningbo. Looking for full-stack development and marketing roles in Beijing, Shanghai, Shenzhen, Hangzhou or Ningbo.',
       summaryTitle: 'Summary',
       summaryCopy: 'My edge: seeing the AI tool-chain, engineering and business problems on one canvas.',
@@ -183,10 +233,12 @@ export const ui = {
     },
     projects: {
       title: 'Work',
+      kicker: 'INDEX — ALL WORK',
       copy: 'Real projects distilled from my résumé: an AI academic-illustration product, a major-specific learning platform, and more tool-chain work to come.',
     },
     project: {
       learnMore: 'Learn more',
+      nextProject: 'NEXT PROJECT',
       techStackSuffix: 'tech stack',
       coverAltSuffix: 'product screenshot',
       labelProject: 'Project',

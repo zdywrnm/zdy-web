@@ -7,14 +7,16 @@ const en = ui.en.notFound;
 ---
 
 <BaseLayout title={zh.title} description={ui.zh.meta.notFound.desc} lang="zh">
-  <section class="page-hero">
-    <div class="container">
+  <section class="page-head" style="min-height: 70svh;">
+    <span class="ghost" aria-hidden="true" style="top: 120px; right: -2vw;">404</span>
+    <div class="container" style="position: relative; z-index: 1;">
+      <span class="page-kicker mono-label">ERROR — NOT FOUND</span>
       <h1 class="page-title">404</h1>
       <p class="page-copy">{zh.copy}</p>
-      <p class="page-copy">{en.copy}</p>
-      <div class="hero-actions" style="justify-content: flex-start;">
+      <p class="page-copy" style="margin-top: 8px;">{en.copy}</p>
+      <div class="hero-actions">
         <a class="button button-primary" href="/">{zh.backHome}</a>
-        <a class="button button-secondary" href="/en/">{en.backHome}</a>
+        <a class="button" href="/en/">{en.backHome}</a>
       </div>
     </div>
   </section>

@@ -1,0 +1,17 @@
+---
+import { ui, type Lang } from '../i18n/ui';
+
+export interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'zh' } = Astro.props;
+// 纯装饰跑马灯（真实技能清单在 /about/），内容渲染两份做 -50% 无缝循环
+const items = ui[lang].about.skills;
+---
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    {[0, 1].map(() => items.map((skill) => <span class="ticker-item">{skill}<i>·</i></span>))}
+  </div>
+</div>
